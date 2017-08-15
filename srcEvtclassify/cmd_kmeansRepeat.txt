@@ -1,0 +1,11 @@
+python kmeansfilter.py 0 > ../log/kmeans/out_0_1
+python kmeansfilter.py 0 > ../log/kmeans/out_0_2
+python kmeansfilter.py 0 > ../log/kmeans/out_0_3
+python kmeansfilter.py 0 > ../log/kmeans/out_0_4
+python kmeansfilter.py 0 > ../log/kmeans/out_0_5
+python kmeansfilter.py 0 > ../log/kmeans/out_0_6
+python kmeansfilter.py 0 > ../log/kmeans/out_0_7
+python kmeansfilter.py 0 > ../log/kmeans/out_0_8
+python kmeansfilter.py 0 > ../log/kmeans/out_0_9
+python kmeansfilter.py 0 > ../log/kmeans/out_0_10
+#exit

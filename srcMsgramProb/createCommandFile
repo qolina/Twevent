@@ -1,0 +1,7 @@
+for i in $(seq -w 000 255) ; do echo "python ngramProb.py gram$i > out$i"; done > cmd.txt
+# Or
+for i in $(seq -w 01 15); do for j in $(seq -w 00 20); do echo "python ngramProb.py ngrams_jan$i-$j"; done done > cmd.txt
+
+// append #exit into cmd.txt
+../multirun/multirun cmd.txt 15 -l log.txt
+

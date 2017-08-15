@@ -1,0 +1,5 @@
+getNgram:getNgram.cpp util.cpp util.h segmenter.cpp segmenter.h extraResource.cpp extraResource.h Headers.h
+	g++ getNgram.cpp util.cpp segmenter.cpp extraResource.cpp -o getNgram
+
+clean:
+	rm -rf *.o getNgram

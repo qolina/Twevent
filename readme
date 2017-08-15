@@ -1,0 +1,150 @@
+# readme file of project
+
+#Part0: preprocessing in srcSegcls
+#Part0.1 python file: srcSegcls/preProcessing.py
+>> Files: preProcessing.py
+>> Input:
+    1) raw twitter date file directory path #dirPath
+    2) stopwords file path #stopwordsFilePath
+    3) output preprocessed twitter date file directory path #outputDirPath
+>> Output:
+    1) tweet Content files: tweetIDString tweetTextString
+    2) structured tweet files: cPickle.dump(tweet)
+>> Function: 
+    1) remove stop words
+    2) filter out non_eng tweet
+    3) output each day's tweets into separate files
+    4) prepare tweet content file to do tweet segment
+>> Run command: python preprocessing.py
+
+#Part1: tweetSegment in srcTweseg
+#Part1.1 cpp project: getNgram.cpp
+>> Files: Headers.h getNgram.cpp segmenter.cpp(.h) util.cpp(.h) extraResource.cpp(.h)
+>> Input: 
+    1)corpus directory path #datapath; 
+    2)gram files output directory path #outputGramPath;
+>> Output: outputGramPath//rawGram_gram1(2/3/4/5)
+>> Function: read all files in datapath, get all 1-5 grams, output to file. (Preparation for tweetSegment)
+>> Run command: 
+    1) g++ getNgram.cpp util.cpp segmenter.cpp extraResource.cpp -o getNgram
+    2) ./getNgram
+
+#Part 1.2 python program: ngramProb in msNgramProb
+>> Files: ngramProb.py
+>> Input:
+    1) gramFilePath # as input parameter
+>> Output:
+    1) gramProbPath = gramFilePath + "_prob" (each line:prob gram)
+>> Function: read grams and look up probabilities in MS N-gram service
+>> Run command: python ngramProb.py gramFile
+
+#Part 1.3 python program: getWikiProb
+# to be added
+>> Files: .py
+>> Input:
+    1) wikiFilePath
+>> Output:
+    1) anchorProbFilePath = "anchorProbFile"
+>> Function: get all anchor texts in wiki, calculate their prob
+>> Run command: python .py 
+
+#Part 1.4 cpp project: tweetSegment.cpp
+>> Files: Headers.h tweetSegment.cpp segmenter.cpp(.h) util.cpp(.h) extraResource.cpp(.h)
+>> Input: 
+    1)corpus directory path #datapath; 
+    2)tool directory path containing 1-5 gramProbFiles and a anchorProbFile() #toolpath
+    3)segged files output directory path #seggedpath = datapath + "segged//"; 
+    #User should created this segged directory at first.
+>> Output: outputGramPath//segged_'originalFileName'
+>> Function: read all tweet files in datapath, segment tweets, output to separate files.
+>> Run command: 
+    1) g++ tweetSegment.cpp util.cpp segmenter.cpp extraResource.cpp -o twesegment
+    2) ./twesegment
+
+
+#Part2: get event segments in srcSegcls
+#Part 2.1 python program: estimate_ps.py
+>> Files: estimate_ps.py
+>> Input:
+    1) segged file directory path #dataFilePath
+>> Output:
+    1) psFilePath = dataFilePath + "segment_ps"
+>> Function: read all segged tweet files, calculate segments' ps value
+>> Run command: python estimate_ps.py
+
+#Part 2.2 python program: getTweUsrHourMap.py
+>> Files: getTweUsrHourMap.py
+>> Input:
+    1) structured tweet file directory path #dataFilePath
+>> Output:
+    1) outputFilePath = dataFilePath + "tweIdToUsrId" + timeWindowIdStr
+    or outputFilePath = dataFilePath + "tweetTime" + timeWindowIdStr
+>> Function: read all original structured tweet files, get usrid/hour for each tweet. Dump into cPickle file
+>> Run command: python getTweUsrHourMap.py
+
+#Part 2.3 python program: getEventSegment.py
+>> Files: getEventSegment.py
+>> Input:
+    1) segged tweet file directory path #dataFilePath
+    2) psFilePath = dataFilePath + "segment_ps"
+    3) tweToUsrFilePath = dataFilePath + "tweIdToUsrId" + timeWindowIdStr
+>> Output:
+    1) eventSegFilePath = dataFilePath + "eventSeg_" + timeWindowIdStr
+>> Function: read all segged tweet files, get event segments for each time window. 
+>> Run command: python getEventSegment.py
+
+#Part 3: clustering and filtering in srcSegcls
+#Part 3.1 python program: getEventSegPair.py
+>> Files: getEventSegPair.py
+>> Input:
+    1) segged file directory path #dataFilePath
+    2) M : parameter in twevent, split one day in M parts
+    3) eventSegFilePath = dataFilePath + "eventSeg" + timeWindowIdStr 
+    4) tweetTimeFilePath = dataFilePath + "tweetTime" + timeWindowIdStr
+>> Output:
+    1) segPairFilePath = dataFilePath + "segPairFile" + timeWindowIdStr
+>> Function: calcuate similarity of all event segment pairs in each day
+>> Run command: python getEventSegPair.py
+
+
+#Part 3.2 python program: getEvent.py
+>> Files: getEvent.py
+>> Input:
+    1) segged file directory path #dataFilePath
+    2) k : parameter in twevent, k-nearest neighbor clustering
+    3) t : parameter in twevent, control precision and recall
+    4) wikiPath = dataFilePath + "anchorProbFile_all" (wiki anchor text's prob file)
+    5) segPairFilePath = dataFilePath + "segPairFile" + timeWindowIdStr
+>> Output:
+    1) eventFile = dataFilePath + "EventFile" + tStr + "_k" + str(kNeib) + "t" + str(taoRatio)
+>> Function: get all events in each day
+>> Run command: python getEvent.py
+
+end
+
+### Twevent(li chen liang) Tweet segmentation
+#Part 1.1 get ngram
+>> Files: TweetSegmentationBySCP.java # select option: get grams from file
+>> Input:
+    1) twitter content file directory path
+    2) stopwords file path 
+>> Output:
+    1) gram file: word1_word2_..._wordn
+>> Function: get all grams need to look up msGramProb with MS N-gram service
+>> Run command: 
+    1) javac TweetSegmentationBySCP.java
+    2) java TweetSegmentationBySCP
+
+#Part 1.2 get ngram prob
+
+#Part 1.3 tweet segmentation
+>> Files: TweetSegmentationBySCP.java # select option: segments tweets in file
+>> Input:
+    1) twitter content file directory path
+    2) wikiPath = "anchorProbFile_all" (wiki anchor text's prob file)
+>> Output:
+    1) segged tweet content file: tweetIDstring seggedTweetText
+>> Function: segment tweets
+>> Run command: 
+    1) javac TweetSegmentationBySCP.java
+    2) java TweetSegmentationBySCP

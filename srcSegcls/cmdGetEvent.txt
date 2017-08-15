@@ -1,0 +1,9 @@
+python estimate_ps.py seg > ../log/out_ltwehash_estimatePs
+python estimate_ps.py word > ../log/out_ltwehash_estimatePs_word
+#sync
+python getEventSegment.py > ../log/out_ltwehash_segcls_geteseg_hfmon
+#sync
+python getEventSegPair.py > ../log/out_ltwehash_segcls_getesegpair_hfmon
+#sync
+python getEvent.py > ../log/out_ltwehash_segcls_getevent_hfmon
+#exit

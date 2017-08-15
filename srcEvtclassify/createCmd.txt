@@ -1,0 +1,1 @@
+for i in $(seq 1 16); do echo "python unsupfilter.py -f $i -s 56 -n 0.5 > out_unsupfilter_norm_mpos_fea$i "; done > run_unsup.sh
